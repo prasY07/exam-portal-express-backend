@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 
 
 const questionSchema = new Schema({
-    name: {
+    question: {
         type:String,
         required:true,
         minlength:5,

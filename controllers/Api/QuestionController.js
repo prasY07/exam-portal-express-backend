@@ -24,8 +24,8 @@ export const questionList = async(req,res) =>{
 
 export const create = async(req,res) =>{
     try {
-        const {name,option_one,option_two,option_three,option_four,correct_option} = req.body;
-        const newQuestion = new Questions({name,option_one,option_two,option_three,option_four,correct_option});
+        const {question,option_one,option_two,option_three,option_four,correct_option} = req.body;
+        const newQuestion = new Questions({question,option_one,option_two,option_three,option_four,correct_option});
         await newQuestion.save();
         const createdQuestion = await singleQuestionResource(newQuestion);
         return res.status(200).json(successResponse(createdQuestion));
@@ -36,7 +36,6 @@ export const create = async(req,res) =>{
 }
 
 
-
 export const update = async(req,res) =>{
     try {
         const questionId = req.params.id;
@@ -45,8 +44,8 @@ export const update = async(req,res) =>{
             return res.status(500).json(errorResponse("Invalid Question"));
 
         }
-        const {name,option_one,option_two,option_three,option_four,correct_option} = req.body;
-        getQuestion.name = name;
+        const {question,option_one,option_two,option_three,option_four,correct_option} = req.body;
+        getQuestion.question = question;
         getQuestion.option_one = option_one;
         getQuestion.option_two = option_two;
         getQuestion.option_three = option_three;
@@ -82,6 +81,7 @@ export const info = async(req,res) => {
 
 export const deleteQuestion = async(req,res) =>{
     try {
+
         const questionId = req.params.id;
         const deletedQuestion = await Questions.deleteOne({ _id: questionId });
         if (deletedQuestion.deletedCount === 1) {
