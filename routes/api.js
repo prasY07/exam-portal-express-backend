@@ -3,6 +3,7 @@ import { create, deleteQuestion, info, questionList, update } from '../controlle
 import { login, logout } from '../controllers/Api/AuthController.js';
 import { verifyAdminByToken } from '../middleware/AdminAuthMiddleware.js';
 import { homeData } from '../controllers/Api/HomeController.js';
+import { examCreate, examDelete, examInformation, examList, examUpdate } from '../controllers/Api/ExamController.js';
 
 const apiRoutes = express.Router();
 apiRoutes.use((req, res, next) => {
@@ -36,5 +37,19 @@ apiRoutes.put('/question/:id/update',update);
 apiRoutes.delete('/question/:id/delete',deleteQuestion);
 
 //End Question Route
+
+
+
+//Start Exam Route
+
+apiRoutes.get('/exam/all-exams',examList);
+apiRoutes.get('/exam/:id/information',examInformation);
+apiRoutes.post('/exam/create',examCreate);
+apiRoutes.put('/exam/:id/update',examUpdate);
+apiRoutes.delete('/exam/:id/delete',examDelete);
+
+//End Exam Route
+
+
 
 export default apiRoutes;
