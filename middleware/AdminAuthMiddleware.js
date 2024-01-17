@@ -6,7 +6,7 @@ import Admin from "../models/Admin.js";
 
 export const verifyAdminByToken = async (req, res, next) => {
   const token = req.headers.authorization; // Extract the token from the request headers
-
+console.log("hereee");
   if (!token) {
     return res.status(401).json(errorResponse("Unauthorized"));
   }

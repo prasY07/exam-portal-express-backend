@@ -1,6 +1,7 @@
 import { listPagination } from "../../config/constant.js";
 import { errorResponse, successResponse, successWithPagination } from "../../helpers/ResponseBuilder.js";
 import Exam from "../../models/Exam.js";
+import Questions from "../../models/Questions.js";
 import { examResource, singleExamResource } from "../../resource/ExamResource.js";
 
 export const examList = async(req,res) =>{
@@ -10,6 +11,7 @@ export const examList = async(req,res) =>{
         const allExams = await Exam.find()
             .skip((currentPage - 1) * perPage)
             .limit(perPage)
+            .populate('questions')
             .exec();
         const totalItems = await Exam.countDocuments();
         const totalPages = Math.ceil(totalItems / perPage);
@@ -24,8 +26,13 @@ export const examList = async(req,res) =>{
 
 export const examCreate = async(req,res) =>{
     try {
-        const {name} = req.body;
-        const newExam = new Exam({name});
+        const {name,selectedQs} = req.body;
+        await Questions.find({ _id: { $in: selectedQs } })
+        .exec().catch((err) => {
+            return res.status(500).json(errorResponse("Invalid Questions"));
+        });
+
+        const newExam = new Exam({name,questions:selectedQs});
         await newExam.save();
         const createdExam = await singleExamResource(newExam);
         return res.status(200).json(successResponse(createdExam));
@@ -44,8 +51,14 @@ export const examUpdate = async(req,res) =>{
             return res.status(500).json(errorResponse("Invalid Exam"));
 
         }
-        const {name} = req.body;
+        await Questions.find({ _id: { $in: selectedQs } })
+        .exec().catch((err) => {
+            return res.status(500).json(errorResponse("Invalid Questions"));
+        });
+        
+        const {name,selectedQs} = req.body;
         getExam.name = name;
+        getExam.questions = selectedQs;
         await getExam.save();
         const updatedQuestion = await singleExamResource(getExam);
         return res.status(200).json(successResponse(updatedQuestion,"Exam updated successfully"));

@@ -1,23 +1,24 @@
 import express from 'express';
-import { create, deleteQuestion, info, questionList, update } from '../controllers/Api/QuestionController.js';
-import { login, logout } from '../controllers/Api/AuthController.js';
+import { create, deleteQuestion, info, questionList, update } from '../controllers/Admin/QuestionController.js';
+import { login, logout } from '../controllers/Admin/AuthController.js';
 import { verifyAdminByToken } from '../middleware/AdminAuthMiddleware.js';
-import { homeData } from '../controllers/Api/HomeController.js';
-import { examCreate, examDelete, examInformation, examList, examUpdate } from '../controllers/Api/ExamController.js';
+import { homeData } from '../controllers/Admin/HomeController.js';
+import { examCreate, examDelete, examInformation, examList, examUpdate } from '../controllers/Admin/ExamController.js';
 
 const apiRoutes = express.Router();
-apiRoutes.use((req, res, next) => {
-    if (req.path !== '/admin/login') {
-        verifyAdminByToken(req,res,next)
-    } else {
-      next();
-    }
-  });
-
+// apiRoutes.use((req, res, next) => {
+//     if (req.path !== '/admin/login') {
+//         verifyAdminByToken(req,res,next)
+//     } else {
+//       next();
+//     }
+//   });
 
 
 //Start Auth
 apiRoutes.post('/admin/login',login);
+apiRoutes.use(verifyAdminByToken);
+
 apiRoutes.get('/admin/logout',logout);
 
 //End Auth

@@ -6,7 +6,7 @@ import { questionResource, singleQuestionResource } from "../../resource/Questio
 export const questionList = async(req,res) =>{
     try {
         const currentPage = parseInt(req.query.page) || 1;
-        const perPage = listPagination;
+        const perPage = listPagination ||req.query.pagination;
         const allQuestions = await Questions.find()
             .skip((currentPage - 1) * perPage)
             .limit(perPage)
@@ -94,4 +94,19 @@ export const deleteQuestion = async(req,res) =>{
         return res.status(500).json(errorResponse("OOPS! something went wrong"));
     }
 
+}
+
+
+export const getLimitedData= async(req,res,next) => {
+
+    try{
+
+        const dataLimit  = req.query.limit || 5;
+        const questions  = new Questions().find().sort({_id:-1}).limit(dataLimit);
+
+        return questions;
+    }catch (err) {
+        console.log(err);
+        return res.status(500).json(errorResponse("OOPS! something went wrong"));
+    }
 }

@@ -25,3 +25,13 @@ export const singleQuestionResource = async(singleQuestion) => {
       
       };
 }
+
+
+export const questionShortResource = async(allQuestions) => {
+   return allQuestions.map((singleQuestion) => {
+      return {
+         id: singleQuestion._id, 
+         question: singleQuestion.question
+      };
+    });
+}
